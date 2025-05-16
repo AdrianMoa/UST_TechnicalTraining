@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script>
+    const s1 = "UST";
+    const s2 = new String("UST");
+    const s3 = new String("UST");
+
+    console.log(s3 == s2);
+    console.log(s1 == s2);
+    console.log(s1 == s3);
+
+    function reverse(){
+        var newArray = "";
+        for(var i = s1.length-1; i>= 0; i--){
+            newArray+= s1[i];
+        }
+        console.log(newArray);
+    }
+    reverse();
+</script>
+<body>
+    
+</body>
+</html>

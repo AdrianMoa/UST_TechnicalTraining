@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" name="text1">
+    <input type="text" name="text2">
+    <label>
+        <br>
+    <input type="radio" name="gender" > Male </label>
+    <input type="radio" name="gender"> Female
+<br>
+    <select id="fruits" name="fruits" onchange="test(event)">
+        <option value="apple">Apple</option>
+        <option value="banana">Banana</option>
+        <option value="orange">Orange</option>
+    </select>
+    <br>
+    <label id="dynamicText"></label>
+</body>
+<script>
+    function test(event){
+        document.getElementById('dynamicText').innerText = event.target.value;
+    }
+</script>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        const numbers = [3,1,6,3,7,-1];
+        const newArray = numbers.map(function(element){
+            return element + 2;
+        });
+
+        numbers.forEach(function(element){
+            console.log(element);
+        });
+
+        console.log(numbers);
+        console.log(newArray);
+
+        const sum = numbers.reduce(function(previosValue, element, currentIndex){
+            console.log(previosValue, element, currentIndex);
+            if(currentIndex % 2 == 1){
+                return previosValue + element;
+            }
+            else{
+                return previosValue;
+            }
+        });
+
+        console.log(sum);
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

@@ -1,0 +1,32 @@
+<html>
+    <script>
+        const a = 1;
+        var b = 5;
+        const numbers = [1,2,3,11,5,-1];
+
+        numbers.sort(function(a,b){
+            return a-b;
+        });
+
+        const newArray = numbers.map(function(a){
+            return a%2 == 0 ? a+10 : a;
+        });
+
+        console.log(numbers);
+        console.log(newArray);
+
+        function clickFunction(event){
+            console.log(event.target.name);
+            return 120;
+        }
+        
+    </script>
+
+    
+    <body>
+        <input onclick="clickFunction(event)" name="text1" type="text">
+        <button onclick="clickFunction(event)" name="button1">Button 1</button>
+        <button onclick="clickFunction(event)" name="button2">Button 2</button>
+        <div></div>
+    </body>
+</html>

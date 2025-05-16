@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script>
+    function bodyfn(){
+        console.log('handler at body level');
+    }
+
+    function handlerOnDiv(event){
+        console.log('div handler');
+        event.stopPropagation();
+        console.log(event);
+        console.log(event.target)
+    }
+</script>
+<body onclick="bodyfn()">
+    <div onclick="handlerOnDiv(event)">
+        <button>Click</button>
+        <button>Click</button>
+        <button>Click</button>
+    </div>
+</body>
+</html>

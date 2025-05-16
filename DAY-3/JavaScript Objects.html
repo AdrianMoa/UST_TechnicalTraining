@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<script>
+    // const o1 = new Object();
+    // o1.age = 10;
+    // o1.limit = 20;
+    // delete o1.age;
+
+    //option 2
+    const book1 = {
+        title : 'Learn JS',
+        price: 100,
+        borrow : function(){
+            console.log('title of the book is '+ this.title);
+        },
+        return : function(){
+            console.log(this.price);
+            this.borrow();
+        }
+    };
+
+    book1.return();
+</script>
+<body>
+    
+</body>
+</html>

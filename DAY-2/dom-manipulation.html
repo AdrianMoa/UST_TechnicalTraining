@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script>
+    function add(){
+        const divElement = document.getElementById('SumResult');
+        divElement.textContent = sum();
+    }
+
+    function addWithStorage(){
+        var local = localStorage.getItem('sum');
+        var sumResult = parseInt(local == null ? '0' : local);
+        sumResult += sum();
+        localStorage.setItem('sum',sumResult);
+        const divElement = document.getElementById('SumResult');
+        divElement.textContent = sumResult;
+    }
+
+    function sum(){
+        var numberResult = 0;
+        const allText = document.querySelectorAll('input[id^="number"]');
+        allText.forEach(element => {
+            numberResult += getNumber(element.id);
+        });
+        return numberResult;
+    }
+
+    function getNumber(elementId){
+        var element = document.getElementById(elementId);
+        return parseInt(element.value == '' ? '0' : element.value);
+    }
+
+    function getRadio(){
+        const divElement = document.getElementById('RadioResult');
+        const radio = document.getElementsByName('gender');
+        radio.forEach(element => {
+            if(element.checked){
+                divElement.textContent = element.value;
+            }
+        });
+    }
+
+    function addNewTextField(){
+        const newText = document.createElement("input");
+        var total = document.querySelectorAll('input[id^="number"]').length;
+        newText.setAttribute("type","text");
+        newText.setAttribute("id", `number${total+1}`);
+        document.getElementById("textFieldsArea").append(newText);
+    }
+
+    function clearStorage(){
+        localStorage.clear();
+        localStorage.removeItem('sum');
+    }
+</script>
+<body>
+    <div id="textFieldsArea">
+    <input type="text" id="number1">
+    <input type="text" id="number2">
+    </div><br>
+    <input type="radio" name="gender" value="Male">Male
+    <input type="radio" name="gender" value="Female">Female<br>
+    <button onclick="add()">Sum</button><br>
+    <button onclick="addWithStorage()">Sum with storage</button><br>
+    <button onclick="getRadio()">Radio select</button><br>
+    <button onclick="addNewTextField()">Add TextField</button><br>
+    <button onclick="clearStorage()">Clear storage</button><br>
+    Sum Result : <div id="SumResult"></div><br>
+    Radio Selected: <div id="RadioResult"></div><br>
+</body>
+</html>

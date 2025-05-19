@@ -5,7 +5,7 @@ async function getAllBooks(){
     const promiseRequest = await fetch(url);
     const bookList = await promiseRequest.json();
     const tableBody = document.getElementById("tableBody");
-    
+    tableBody.innerHTML = '';
     bookList.forEach(book => {
         tableBody.innerHTML += `
         <tr>
@@ -48,8 +48,19 @@ async function deleteBook(bookId){
     const deleteRecord = confirm(`Do you want delete the Book with ID ${bookId}?`);
     if(!deleteRecord) return;
 
-    await fetch(`${url}/${bookId}`, { method: 'DELETE'});
-    alert('Book deleted succesfully!');
+    await fetch(`${url}/${bookId}`, { method: 'DELETE'})
+    .then(() => getAllBooks())
+    .catch(error => console.error('Error: ', error));
+}
 
-    getAllBooks();
+function cancelEdition(){
+    document.getElementById('bookId').value = '';
+    document.getElementById('bookTitle').value = '';
+    document.getElementById('price').value = '';
+    toogleButtons(false);
+};
+
+async function saveBook(){
+    const bookTitle = document.getElementById('bookTitle').value.trim();
+    console.log(bookTitle);
 }

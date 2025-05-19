@@ -15,7 +15,7 @@
                 <div class="mb-3">
                     <label for="bookTitle" class="form-label">Book title</label>
                     <input id="bookId" type="hidden" name="bookId">
-                    <input id="bookTitle" class="form-control" type="text" name="bookTitle">
+                    <input id="bookTitle" class="form-control" type="text" name="bookTitle" required>
                 </div>
                 <div class="mb-3">
                     <label for="price" class="form-label">Book Price:</label>
@@ -23,9 +23,9 @@
                 </div>
 
                 <div class="mb-3">
-                    <input type="button" id="submit" class="btn btn-primary" value="Submit">
-                    <input type="button" id="update" class="btn btn-success" value="Update">
-                    <input type="button" id="cancel" class="btn btn-secondary" value="Cancel">
+                    <input type="button" id="submit" class="btn btn-primary" value="Submit" onclick="saveBook()">
+                    <input type="button" id="update" class="btn btn-success" value="Update" onclick="saveBook()">
+                    <input type="button" id="cancel" class="btn btn-secondary" value="Cancel" onclick="cancelEdition()">
                 </div>
             </form>
         </div>

@@ -1,5 +1,3 @@
 {
-  "Books": [
-    {"id":"15as","bookTitle":"Foundation","price":5.9}
-  ]
+  "Books": [{"id":"15as","bookTitle":"Foundation","price":5.9}]
 }

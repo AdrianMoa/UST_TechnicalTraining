@@ -72,12 +72,27 @@ function ProjectForm({ project: initialProject, onSave, onCancel }: ProjectFormP
         <form className="input-group vertical" onSubmit={handleSubmit}>
             <label htmlFor="name">Project Name</label>
             <input type="text" name="name" placeholder="enter name" value={project.name} onChange={handleChange} />
+            {errors.name.length > 0 && (
+                <div  className='card error'>
+                    <p>{errors.name}</p>
+                </div>
+            )}
 
             <label htmlFor="description">Project Description</label>
             <textarea name="description" placeholder="enter description" value={project.description} onChange={handleChange}/>
+            {errors.description.length > 0 && (
+                <div className='card error'>
+                    <p>{errors.description}</p>
+                </div>
+            )}
 
             <label htmlFor="budget">Project Bubget</label>
             <input type="number" name="budget" placeholder="enter budget" value={project.budget} onChange={handleChange} />
+            {errors.budget.length > 0 && (
+                <div className='card error'>
+                    <p>{errors.budget}</p>
+                </div>
+            )}
             
             <label htmlFor="isActive">Active?</label>
             <input type="checkbox" name="isActive" checked={project.isActive} onChange={handleChange} />

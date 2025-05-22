@@ -7,6 +7,7 @@ function ProjectsPage(){
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | undefined | null>(undefined);
+    const [currentPage, setCurrentPage] = useState(1);
 
     //Approach 1: using promise then
     // useEffect(() => {
@@ -32,9 +33,13 @@ function ProjectsPage(){
         async function loadProjects(){
             setLoading(true);
             try{
-                const data =  await projectAPI.get(1);
+                const data =  await projectAPI.get(currentPage);
                 setError('');
-                setProjects(data);
+                if(currentPage === 1) {
+                    setProjects(data);
+                } else {
+                    setProjects((projects) => [...projects, ...data]);
+                }
             }
             catch (e) {
                 if (e instanceof Error) {
@@ -45,8 +50,11 @@ function ProjectsPage(){
             }
         }
         loadProjects();
-    }, []);
+    }, [currentPage]);
 
+    const handleMoreClick = () => {
+        setCurrentPage((currentPage) => currentPage + 1);
+    }
 
     const saveProject = (project: Project) => {
         let updatedProjects = projects.map((p: Project) => {
@@ -71,6 +79,19 @@ function ProjectsPage(){
                 </div>
             )}
             <ProjectList onSave={saveProject} projects={projects} />
+
+            {!loading && !error && (
+                <div className="row">
+                    <div className="col-sm-12">
+                        <div className="button-group fluid">
+                            <button className="button default" onClick={handleMoreClick}>
+                                More...
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {loading && (
                 <div className="center-page">
                     <span className="spinner primary"></span>

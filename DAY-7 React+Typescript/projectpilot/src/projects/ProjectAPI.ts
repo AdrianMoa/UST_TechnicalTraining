@@ -33,11 +33,11 @@ function parseJSON(response: Response){
     return response.json();
 }
 
-function delay(ms: number){
-    return function (x: any):  Promise<any> {
-        return new Promise((resolve) => setTimeout(() => resolve(x), ms));
-    }
-}
+// function delay(ms: number){
+//     return function (x: any):  Promise<any> {
+//         return new Promise((resolve) => setTimeout(() => resolve(x), ms));
+//     }
+// }
 
 function convertToProjectModels(data: any[]): Project[] {
     let projects: Project[] = data.map(convertToProjectModel);

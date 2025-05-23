@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ProjectList from './ProjectList';
 import { Project } from "./Project";
 import { projectAPI } from "./ProjectAPI";

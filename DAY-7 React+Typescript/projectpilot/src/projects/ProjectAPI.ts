@@ -88,6 +88,23 @@ const projectAPI = {
             .then(convertToProjectModel);
     },
     
+    async post(project: Project) {
+        return fetch(`${url}`, {
+            method: 'POST',
+            body: JSON.stringify(project),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(checkStatus)
+        .then(parseJSON)
+        .catch((error: TypeError) => {
+            console.log('log client error ' + error);
+            throw new Error(
+                'There was an error creating the new project. Please try again.'
+            )
+        });
+    }
 };
 
 export { projectAPI };

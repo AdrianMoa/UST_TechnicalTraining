@@ -15,10 +15,21 @@ function ProjectForm({ project: initialProject, onSave, onCancel }: ProjectFormP
         description:'',
         budget:'',
     });
+    const [isSubmitted, setIsSubmitted] = useState(false);
+
+    function randomNumberInRange(min:number, max:number) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 
     const handleSubmit = (event: SyntheticEvent) => {
         event.preventDefault();
-        if(!isValid()) return;
+        setIsSubmitted(true);
+        const newErrors = validate(project);
+        setErrors(newErrors);
+
+        if(Object.values(newErrors).some(error => error)) return;
+
+        project.imageUrl = `/assets/placeimg_500_300_arch${randomNumberInRange(1,12)}.jpg`
         onSave(project);
     };
 
@@ -33,46 +44,43 @@ function ProjectForm({ project: initialProject, onSave, onCancel }: ProjectFormP
         const change = {
             [name] : updatedValue,
         };
-
-        let updatedProject : Project;
-        setProject((p) => {
-            updatedProject = new Project({...p, ...change});
-            return updatedProject;
-        });
-
-        setErrors(() => validate(updatedProject));
+        
+        let updatedProject: Project = new Project({ ...project, ...change});
+        setProject(updatedProject);
+        setErrors({ ...errors, ...validate(updatedProject)});
     };
 
-    function validate(project: Project){
+    const validate = (project: Project) => {
         let errors: any = { name:'', description:'', budget:''};
-        if(project.name.length === 0){
-            errors.name = 'Name is required';
+        if(project.name === null || project.name === undefined){
+            errors.name = 'Name is required.';
         }
-        if(project.name.length > 0 && project.name.length < 3){
-            errors.name = 'Name needs to be at least 3 characters.';
+        if(!project.name.trim()){
+            errors.name = 'Name could not be empty or whitespace.';
         }
-        if(project.description.length === 0){
+        if(project.name.length > 150){
+            errors.name = 'Name needs to be at max 150 characters.';
+        }
+        if(project.description === null || project.description === undefined){
             errors.description = 'Description is required.';
         }
-        if(project.budget === 0){
-            errors.budget = 'Budget must be more than $0.';
+        if(!project.description.trim()){
+            errors.description = 'Description could not be empty or whitespace.';
+        }
+        if(project.description.length > 2000){
+            errors.description = 'Description needs to be at max 2000 characters.';
+        }
+        if(project.budget <= 0){
+            errors.budget = 'Budget must be greater than $0.';
         }
         return errors;
-    }
-
-    function isValid(){
-        return (
-            errors.name.length === 0 &&
-            errors.description.length === 0 &&
-            errors.budget.length === 0
-        );
     }
     
     return (
         <form className="input-group vertical" onSubmit={handleSubmit}>
             <label htmlFor="name">Project Name</label>
             <input type="text" name="name" placeholder="enter name" value={project.name} onChange={handleChange} />
-            {errors.name.length > 0 && (
+            {isSubmitted && errors.name.length > 0 && (
                 <div  className='card error'>
                     <p>{errors.name}</p>
                 </div>

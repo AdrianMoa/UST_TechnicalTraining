@@ -20,5 +20,6 @@ export class Project{
         if(initializer.contractTypeId) this.contractTypeId = initializer.contractTypeId;
         if(initializer.contractSignedOn) this.contractSignedOn = initializer.contractSignedOn;
         if(initializer.budget) this.budget = initializer.budget;
+        if(initializer.isActive) this.isActive = initializer.isActive;
     }
 }

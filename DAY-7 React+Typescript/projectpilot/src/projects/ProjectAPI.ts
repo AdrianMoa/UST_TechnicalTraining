@@ -104,6 +104,23 @@ const projectAPI = {
                 'There was an error creating the new project. Please try again.'
             )
         });
+    },
+
+    async delete(id: number){
+        return fetch(`${url}/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(checkStatus)
+        .then(parseJSON)
+        .catch((error: TypeError) => {
+            console.log('log client error ' + error);
+            throw new Error(
+                'There was an error deleting the project. Please try again.'
+            )
+        })
     }
 };
 

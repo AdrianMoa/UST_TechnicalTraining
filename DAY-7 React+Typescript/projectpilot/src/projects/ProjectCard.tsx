@@ -1,5 +1,7 @@
+import type React from "react";
 import { Project } from "./Project";
 import { Link } from "react-router";
+import { useState } from "react";
 
 function formatDescription(description: string): string {
     return description.substring(0,60) + '...';
@@ -8,13 +10,32 @@ function formatDescription(description: string): string {
 interface ProjectCardProps {
     project: Project;
     onEdit: (project: Project) => void;
+    onDelete: (id: number) => void;
 }
 
-function ProjectCard(props: ProjectCardProps){
-    const { project, onEdit } = props;
-    const handleEditClick = (projectBeingEdited: Project) => {
-        onEdit(projectBeingEdited);
-    };
+function ProjectCard({project, onEdit, onDelete}: ProjectCardProps){
+    const [showModal, setShowModal] = useState(false);
+
+    const ConfirmModal: React.FC<{ onConfirm: () => void; onCancel: () => void}> = ({ onConfirm, onCancel}) => {
+        return (
+            <div style={{ position: "fixed", top: "50%", left: "50%", 
+            transform: "translate(-50%,-50%)", padding: "20px", 
+            background: "white", border: "1px solid black", zIndex: 1000}}>
+                <p>{`Do you want to delete project '${project.name}'`}</p>
+                <button onClick={onConfirm}>Yes</button>
+                <button onClick={onCancel}>No</button>
+            </div>
+        );
+    }
+
+    const handleDelete = (id: number) => {
+        setShowModal(false);
+        onDelete(id);
+    }
+
+    const handleCancel = () => {
+        setShowModal(false);
+    }
 
     return (
         <div className="card">
@@ -27,10 +48,15 @@ function ProjectCard(props: ProjectCardProps){
                     <p>{formatDescription(project.description)}</p>
                     <p>Budget : {project.budget.toLocaleString()}</p>
                 </Link>
-                <button className="bordered" onClick={() => { handleEditClick(project); }}>
+                <button className="bordered" onClick={() => { onEdit(project); }}>
                     <span className="icon-edit"></span>
                     Edit
                 </button>
+                <button className="bordered" onClick={ () => setShowModal(true)}>
+                    <span className="icon-alert"></span>
+                    Delete
+                </button>
+                {showModal && <ConfirmModal onConfirm={ () => handleDelete(project.id ?? 0) } onCancel={handleCancel} />}
             </section>
         </div>
     );

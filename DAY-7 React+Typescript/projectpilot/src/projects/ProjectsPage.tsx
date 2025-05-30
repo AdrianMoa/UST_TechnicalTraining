@@ -9,46 +9,27 @@ function ProjectsPage(){
     const [error, setError] = useState<string | undefined | null>(undefined);
     const [currentPage, setCurrentPage] = useState(1);
 
-    //Approach 1: using promise then
-    // useEffect(() => {
-    //     setLoading(true);
-    //     projectAPI
-    //         .get(1)
-    //         .then((data) => {
-    //             setError(null);
-    //             setLoading(false);
-    //             setProjects(data);
-    //         })
-    //         .catch((e) => {
-    //             setLoading(false);
-    //             setError(e.message);
-    //             if(e instanceof Error){
-    //                 setError(e.message);
-    //             }
-    //         });
-    // }, []);
-
-    // Approach 2: using async/await
-    useEffect(() => {
-        async function loadProjects(){
-            setLoading(true);
-            try{
-                const data =  await projectAPI.get(currentPage);
-                setError('');
-                if(currentPage === 1) {
-                    setProjects(data);
-                } else {
-                    setProjects((projects) => [...projects, ...data]);
-                }
-            }
-            catch (e) {
-                if (e instanceof Error) {
-                    setError(e.message);
-                }
-            } finally {
-                setLoading(false);
+    async function loadProjects(){
+        setLoading(true);
+        try{
+            const data =  await projectAPI.get(currentPage);
+            setError('');
+            if(currentPage === 1) {
+                setProjects(data);
+            } else {
+                setProjects((projects) => [...projects, ...data]);
             }
         }
+        catch (e) {
+            if (e instanceof Error) {
+                setError(e.message);
+            }
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
         loadProjects();
     }, [currentPage]);
 
@@ -72,6 +53,20 @@ function ProjectsPage(){
             });
     }
 
+    const deleteProject = (id: number) => {
+        console.log(id);
+        projectAPI
+            .delete(id)
+            .then(() => {
+                loadProjects();
+            })
+            .catch((e) => {
+                if (e instanceof Error) {
+                    setError(e.message);
+                }
+            });
+    }
+
     return (
         <>
             <h1>Projects</h1>
@@ -87,7 +82,7 @@ function ProjectsPage(){
                     </div>
                 </div>
             )}
-            <ProjectList onSave={saveProject} projects={projects} />
+            <ProjectList onSave={saveProject} projects={projects} onDelete={deleteProject} />
 
             {!loading && !error && (
                 <div className="row">

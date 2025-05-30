@@ -1,6 +1,7 @@
 
 import { useState, type SyntheticEvent } from 'react';
 import { Project } from './Project';
+import { idAPI } from './IDAPI';
 
 interface ProjectFormProps{
     project: Project;
@@ -21,16 +22,25 @@ function ProjectForm({ project: initialProject, onSave, onCancel }: ProjectFormP
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    const handleSubmit = (event: SyntheticEvent) => {
+    const handleSubmit = async (event: SyntheticEvent) => {
         event.preventDefault();
-        setIsSubmitted(true);
-        const newErrors = validate(project);
-        setErrors(newErrors);
+        try {
+            setIsSubmitted(true);
+            const newErrors = validate(project);
+            setErrors(newErrors);
 
-        if(Object.values(newErrors).some(error => error)) return;
+            if(Object.values(newErrors).some(error => error)) return;
 
-        project.imageUrl = `/assets/placeimg_500_300_arch${randomNumberInRange(1,12)}.jpg`
-        onSave(project);
+            if(project.isNew){
+                project.imageUrl = `/assets/placeimg_500_300_arch${randomNumberInRange(1,12)}.jpg`;
+                project.id = await idAPI.getNextID();
+            }
+            
+            onSave(project);
+            
+        } catch (error) {
+            console.error('Error on submit: ', error);
+        }
     };
 
     const handleChange = (event: any) => {
@@ -81,7 +91,7 @@ function ProjectForm({ project: initialProject, onSave, onCancel }: ProjectFormP
             <label htmlFor="name">Project Name</label>
             <input type="text" name="name" placeholder="enter name" value={project.name} onChange={handleChange} />
             {isSubmitted && errors.name.length > 0 && (
-                <div  className='card error'>
+                <div  className='card large error'>
                     <p>{errors.name}</p>
                 </div>
             )}
@@ -89,7 +99,7 @@ function ProjectForm({ project: initialProject, onSave, onCancel }: ProjectFormP
             <label htmlFor="description">Project Description</label>
             <textarea name="description" placeholder="enter description" value={project.description} onChange={handleChange}/>
             {errors.description.length > 0 && (
-                <div className='card error'>
+                <div className='card large error'>
                     <p>{errors.description}</p>
                 </div>
             )}
@@ -97,7 +107,7 @@ function ProjectForm({ project: initialProject, onSave, onCancel }: ProjectFormP
             <label htmlFor="budget">Project Bubget</label>
             <input type="number" name="budget" placeholder="enter budget" value={project.budget} onChange={handleChange} />
             {errors.budget.length > 0 && (
-                <div className='card error'>
+                <div className='card large error'>
                     <p>{errors.budget}</p>
                 </div>
             )}

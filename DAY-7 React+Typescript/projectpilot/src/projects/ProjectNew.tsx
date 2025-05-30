@@ -9,13 +9,15 @@ function ProjectNew() {
     const [error, setError] = useState<string | undefined | null>(undefined);
 
     const cancelEditing = () => {
-        navigate("/");
+        navigate("/projects");
     }
 
     const createProject = (project: Project) => {
         projectAPI
             .post(project)
-            .then(() => {})
+            .then(() => {
+                navigate('/projects')
+            })
             .catch((e) => {
                 if(e instanceof Error){
                     setError(e.message);

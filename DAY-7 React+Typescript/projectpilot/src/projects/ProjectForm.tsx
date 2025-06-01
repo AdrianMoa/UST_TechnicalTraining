@@ -87,7 +87,7 @@ function ProjectForm({ project: initialProject, onSave, onCancel }: ProjectFormP
     }
     
     return (
-        <form className="input-group vertical" onSubmit={handleSubmit}>
+        <form className="input-group vertical" style={{ maxWidth: '500px'}} onSubmit={handleSubmit}>
             <label htmlFor="name">Project Name</label>
             <input type="text" name="name" placeholder="enter name" value={project.name} onChange={handleChange} />
             {isSubmitted && errors.name.length > 0 && (

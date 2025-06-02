@@ -1,5 +1,6 @@
 import { Project } from './Project';
-const baseUrl = 'http://localhost:4000';
+//const baseUrl = 'http://localhost:4000'; //this is the port configured from json-server
+const baseUrl = 'http://localhost:3000'; //this is the port configured from NestJS API.
 const url = `${baseUrl}/projects`;
 
 function translateStatusToErrorMessage(status: number){
@@ -89,6 +90,7 @@ const projectAPI = {
     },
     
     async post(project: Project) {
+        console.log(project);
         return fetch(`${url}`, {
             method: 'POST',
             body: JSON.stringify(project),

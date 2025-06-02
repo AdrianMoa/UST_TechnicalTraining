@@ -5,10 +5,12 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 @Injectable()
 export class ProjectsService {
   create(createProjectDto: CreateProjectDto) {
+    console.log(createProjectDto);
     return 'This action adds a new project';
   }
 
   findAll() {
+    console.log("Returning log from get all");
     return `This action returns all projects`;
   }
 

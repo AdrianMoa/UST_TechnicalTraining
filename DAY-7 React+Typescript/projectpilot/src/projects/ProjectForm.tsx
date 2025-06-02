@@ -33,7 +33,7 @@ function ProjectForm({ project: initialProject, onSave, onCancel }: ProjectFormP
 
             if(project.isNew){
                 project.imageUrl = `/assets/placeimg_500_300_arch${randomNumberInRange(1,12)}.jpg`;
-                project.id = await idAPI.getNextID();
+                //project.id = await idAPI.getNextID();
             }
             
             onSave(project);

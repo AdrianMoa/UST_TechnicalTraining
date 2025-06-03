@@ -1,7 +1,7 @@
 import { Project } from './Project';
 //const baseUrl = 'http://localhost:4000'; //this is the port configured from json-server
 const baseUrl = 'http://localhost:3000'; //this is the port configured from NestJS API.
-const url = `${baseUrl}/projects`;
+const url = `${baseUrl}/project`;
 
 function translateStatusToErrorMessage(status: number){
     switch (status){

@@ -12,8 +12,8 @@ export class Project {
     @Prop()
     imageUrl: string;
 
-    @Prop()
-    contractTypeId: number;
+    // @Prop()
+    // contractTypeId: number;
 
     @Prop()
     contractSignedOn: Date;

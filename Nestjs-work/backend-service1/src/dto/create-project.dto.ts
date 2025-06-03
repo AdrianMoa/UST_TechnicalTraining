@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsString, MaxLength, MinLength } from "@nestjs/class-validator";
+import { IsBoolean, IsDateString, IsNotEmpty, IsNumber, IsString, MaxLength, MinLength } from "@nestjs/class-validator";
 
 export class CreateProjectDto {
     @IsString()
@@ -16,10 +16,7 @@ export class CreateProjectDto {
     @IsNotEmpty()
     readonly imageUrl: string;
 
-    @IsNumber()
-    readonly contractTypeId: number | undefined;
-
-    @IsString()
+    @IsDateString()
     readonly contractSignedOn: Date;
 
     @IsNumber()

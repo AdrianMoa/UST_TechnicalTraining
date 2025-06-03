@@ -12,7 +12,19 @@ export class ProjectController {
     async createProject(
         @Res() response: Response,
         @Body() createProjectDto: CreateProjectDto) {
-            throw new BadRequestException();
+            try{
+                const newProject = await this.projectService.createProject(createProjectDto);
+                return response.status(HttpStatus.CREATED).json({
+                    message: 'Project has been created successfully',
+                    newProject,
+                });
+            } catch (err) {
+                return response.status(HttpStatus.BAD_REQUEST).json({
+                    statusCode: 400,
+                    message: 'Error: Project not created!',
+                    error: 'Bad Request'
+                });
+            }
     }
 
     @Put('/:id')
@@ -20,7 +32,15 @@ export class ProjectController {
         @Res() response: Response, 
         @Param('id') projectId: string, 
         @Body() updateProjectDto: UpdateProjectDto) {
-            throw new BadRequestException();
+            try{
+                const existingProject = await this.projectService.updateProject(projectId, updateProjectDto);
+                return response.status(HttpStatus.OK).json({
+                    message: 'Project has been successfully updated',
+                    existingProject,
+                });
+            } catch (err) {
+                return response.status(err.status).json(err.response);
+            }
     }
 
     @Get()
@@ -40,13 +60,29 @@ export class ProjectController {
     async getProject(
         @Res() response: Response,
         @Param('id') projectId: string) {
-            throw new BadRequestException();
+            try {
+                const existingProject = await this.projectService.getProject(projectId);
+                return response.status(HttpStatus.OK).json({
+                    message: 'Project found successfully',
+                    existingProject,
+                });
+            } catch (err) {
+                return response.status(err.status).json(err.response);
+            }
     }
 
     @Delete('/:id')
     async deleteProject(
         @Res() response: Response,
         @Param('id') projectId: string) {
-        throw new BadRequestException();
+        try {
+            const deletedProject = await this.projectService.deleteProject(projectId);
+            return response.status(HttpStatus.OK).json({
+                message: 'Project deleted successfully',
+                deletedProject,
+            });
+        } catch (err) {
+            return response.status(err.status).json(err.response);
+        }
     }
 }

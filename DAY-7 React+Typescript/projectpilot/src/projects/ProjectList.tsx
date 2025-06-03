@@ -6,7 +6,7 @@ import ProjectForm from './ProjectForm';
 interface ProjectListProps{
     projects: Project[];
     onSave: (project: Project) => void;
-    onDelete: (id: number) => void;
+    onDelete: (id: string) => void;
 }
 
 function ProjectList({projects, onSave, onDelete}: ProjectListProps){
@@ -21,7 +21,7 @@ function ProjectList({projects, onSave, onDelete}: ProjectListProps){
     }
 
     const items = projects.map(project => (
-        <div key={project.id} className='cols-sm'>
+        <div key={project._id} className='cols-sm'>
             {project === projectBeingEdited ? 
                 (<ProjectForm project={project} onCancel={cancelEditing} onSave={onSave} />) : 
                 (<ProjectCard project={project} onEdit={handleEdit} onDelete={onDelete} />)}

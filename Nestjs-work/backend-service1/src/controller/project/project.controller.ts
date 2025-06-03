@@ -82,6 +82,7 @@ export class ProjectController {
                 deletedProject,
             });
         } catch (err) {
+            
             return response.status(err.status).json(err.response);
         }
     }

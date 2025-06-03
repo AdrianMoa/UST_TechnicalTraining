@@ -10,7 +10,7 @@ function formatDescription(description: string): string {
 interface ProjectCardProps {
     project: Project;
     onEdit: (project: Project) => void;
-    onDelete: (id: number) => void;
+    onDelete: (id: string) => void;
 }
 
 function ProjectCard({project, onEdit, onDelete}: ProjectCardProps){
@@ -28,7 +28,7 @@ function ProjectCard({project, onEdit, onDelete}: ProjectCardProps){
         );
     }
 
-    const handleDelete = (id: number) => {
+    const handleDelete = (id: string) => {
         setShowModal(false);
         onDelete(id);
     }
@@ -41,7 +41,7 @@ function ProjectCard({project, onEdit, onDelete}: ProjectCardProps){
         <div className="card">
             <img src={project.imageUrl} alt={project.name} />
             <section className="section dark">
-                <Link to={'/projects/' + project.id}>
+                <Link to={'/projects/' + project._id}>
                     <h5 className="strong">
                         <strong>{project.name}</strong>
                     </h5>
@@ -56,7 +56,7 @@ function ProjectCard({project, onEdit, onDelete}: ProjectCardProps){
                     <span className="icon-alert"></span>
                     Delete
                 </button>
-                {showModal && <ConfirmModal onConfirm={ () => handleDelete(project.id ?? 0) } onCancel={handleCancel} />}
+                {showModal && <ConfirmModal onConfirm={ () => handleDelete(project._id ?? '') } onCancel={handleCancel} />}
             </section>
         </div>
     );

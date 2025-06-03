@@ -55,7 +55,7 @@ const projectAPI = {
             const response = await fetch(`${url}?_page=${page}&_limit=${limit}&_sort=name`);
             const response_1 = await checkStatus(response);
             const data = await parseJSON(response_1);
-            return convertToProjectModels(data);
+            return convertToProjectModels(data.projectsData);
         } catch (error) {
             console.log('log client error ' + error);
             throw new Error(
@@ -65,7 +65,7 @@ const projectAPI = {
     },
 
     async put(project: Project) {
-        return fetch(`${url}/${project.id}`, {
+        return fetch(`${url}/${project._id}`, {
             method: 'PUT',
             body: JSON.stringify(project),
             headers: {
@@ -82,15 +82,16 @@ const projectAPI = {
             });
     },
 
-    async find(id: number) {
+    async find(id: string) {
         return fetch(`${url}/${id}`)
             .then(checkStatus)
             .then(parseJSON)
-            .then(convertToProjectModel);
+            .then(data => {
+                return convertToProjectModel(data.existingProject);
+            });
     },
     
     async post(project: Project) {
-        console.log(project);
         return fetch(`${url}`, {
             method: 'POST',
             body: JSON.stringify(project),
@@ -108,7 +109,7 @@ const projectAPI = {
         });
     },
 
-    async delete(id: number){
+    async delete(id: string){
         return fetch(`${url}/${id}`, {
             method: 'DELETE',
             headers: {

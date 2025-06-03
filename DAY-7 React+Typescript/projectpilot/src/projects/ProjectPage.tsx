@@ -9,14 +9,14 @@ function ProjectPage() {
     const [project, setProject] = useState<Project | null>(null);
     const [error, setError] = useState<string | null>(null);
     const params = useParams();
-    const id = Number(params.id);
+    const id = params.id;
 
     useEffect(() => {
         setLoading(true);
         projectAPI
-            .find(id)
-            .then((data) => {
-                setProject(data);
+            .find(id ?? '')
+            .then(data => {
+                setProject(data ?? new Project());
                 setLoading(false);
             })
             .catch((e) => {

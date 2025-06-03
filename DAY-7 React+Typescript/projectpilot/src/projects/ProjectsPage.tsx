@@ -42,7 +42,7 @@ function ProjectsPage(){
             .put(project)
             .then((updatedProject) => {
                 let updatedProjects = projects.map((p: Project) => {
-                    return p.id  === project.id ? new Project(updatedProject) : p;
+                    return p._id  === project._id ? new Project(updatedProject.existingProject) : p;
                 });
                 setProjects(updatedProjects);
             })
@@ -53,8 +53,7 @@ function ProjectsPage(){
             });
     }
 
-    const deleteProject = (id: number) => {
-        console.log(id);
+    const deleteProject = (id: string) => {
         projectAPI
             .delete(id)
             .then(() => {

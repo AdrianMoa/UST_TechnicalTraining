@@ -1,12 +1,14 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res, UseInterceptors } from "@nestjs/common";
 import { ApiCreatedResponse, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Response } from "express";
 import { CreateProjectDto } from "src/dto/create-project.dto";
 import { UpdateProjectDto } from "src/dto/update-project.dto";
+import { LoggingInterceptor } from "src/interceptor/logging.interceptor";
 import { ProjectService } from "src/service/project/project.service";
 
 @ApiTags('projects')
 @Controller('projects')
+@UseInterceptors(LoggingInterceptor)
 export class ProjectController {
     constructor(private readonly projectService: ProjectService) { }
 

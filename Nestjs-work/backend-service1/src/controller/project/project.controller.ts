@@ -1,14 +1,18 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res, BadRequestException} from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from "@nestjs/common";
+import { ApiCreatedResponse, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Response } from "express";
 import { CreateProjectDto } from "src/dto/create-project.dto";
 import { UpdateProjectDto } from "src/dto/update-project.dto";
 import { ProjectService } from "src/service/project/project.service";
 
-@Controller('project')
+@ApiTags('projects')
+@Controller('projects')
 export class ProjectController {
     constructor(private readonly projectService: ProjectService) { }
 
     @Post()
+    @ApiOperation({ summary: 'Create a new Project'})
+    @ApiCreatedResponse({ description: 'Project has been created successfully'})
     async createProject(
         @Res() response: Response,
         @Body() createProjectDto: CreateProjectDto) {

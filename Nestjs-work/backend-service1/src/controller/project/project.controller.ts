@@ -3,7 +3,7 @@ import { ApiCreatedResponse, ApiOperation, ApiResponse, ApiTags } from "@nestjs/
 import { Response } from "express";
 import { CreateProjectDto } from "src/dto/create-project.dto";
 import { UpdateProjectDto } from "src/dto/update-project.dto";
-import { LoggingInterceptor } from "src/interceptor/logging.interceptor";
+import { LoggingInterceptor } from "src/common/interceptor/logging.interceptor";
 import { Project } from "src/schema/project.schema";
 import { ProjectService } from "src/service/project/project.service";
 

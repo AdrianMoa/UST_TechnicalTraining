@@ -8,6 +8,13 @@ export class TransformInterceptor implements NestInterceptor {
     intercept(
         context: ExecutionContext, 
         next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
-            return next.handle().pipe(map((data) => instanceToPlain(data)));
+            console.log("intercep: ");
+            return next.handle().pipe(map((data) => {
+                console.log('RAW data: ');
+                console.log(data);
+                let transf = instanceToPlain(data);
+                console.log('Data transformed: ');
+                console.log(transf);
+            }));
     }
 }

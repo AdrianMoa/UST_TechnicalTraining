@@ -4,6 +4,7 @@ import { Response } from "express";
 import { CreateProjectDto } from "src/dto/create-project.dto";
 import { UpdateProjectDto } from "src/dto/update-project.dto";
 import { LoggingInterceptor } from "src/interceptor/logging.interceptor";
+import { Project } from "src/schema/project.schema";
 import { ProjectService } from "src/service/project/project.service";
 
 @ApiTags('projects')
@@ -50,16 +51,32 @@ export class ProjectController {
     }
 
     @Get()
-    async getProjects(@Res() response: Response) {
+    async getProjects(@Res({ passthrough: true}) response: Response) {
         try {
+            response.setHeader('X-Custom', 'value');
             const projectsData = await this.projectService.getAllProjects();
-            return response.status(HttpStatus.OK).json({
+            //original
+            /*return response.status(HttpStatus.OK).json({
                 message: 'All projects data found successfully',
                 projectsData,
-            });
+            });*/
+
+            //First solution: Together with passthrough, setHeader and the return with the keys, works!
+            return {
+                message: 'test',
+                projectsData
+            }
+
+            //Solution 2: Remove the use of @Res
+            //Solution 3: Remove TransformationInterceptor
         } catch (err) {
             return (response as any).status(err.status).json(err.response);
         }
+    }
+
+    @Get('projects2')
+    async getProjects2() : Promise<Project[]> {
+        return (await this.projectService.getAllProjects());
     }
 
     @Get('/:id')

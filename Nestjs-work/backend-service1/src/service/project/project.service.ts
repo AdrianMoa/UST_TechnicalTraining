@@ -4,10 +4,11 @@ import { Model } from "mongoose";
 import { CreateProjectDto } from "src/dto/create-project.dto";
 import { UpdateProjectDto } from "src/dto/update-project.dto";
 import { IProject } from "src/interface/project.interface";
+import { ProjectDocument } from "src/schema/project.schema";
 
 @Injectable()
 export class ProjectService {
-    constructor(@InjectModel('Project') private projectModel: Model<IProject>){}
+    constructor(@InjectModel('Project') private projectModel: Model<ProjectDocument>){}
 
     async createProject(createProjectDto: CreateProjectDto): Promise<IProject> {
         const newProject = new this.projectModel(createProjectDto);
@@ -17,7 +18,7 @@ export class ProjectService {
 
     async updateProject(projectId: string, updateProjectDto: UpdateProjectDto) : Promise<IProject | null> {
         const project = await this.projectModel
-            .findByIdAndUpdate(projectId, updateProjectDto).lean();
+            .findByIdAndUpdate(projectId, updateProjectDto, { new: true }).lean();
 
         return project ? this.toIProject(project) : null;
     }

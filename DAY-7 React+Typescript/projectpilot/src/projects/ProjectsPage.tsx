@@ -42,7 +42,7 @@ function ProjectsPage(){
             .put(project)
             .then((updatedProject) => {
                 let updatedProjects = projects.map((p: Project) => {
-                    return p._id  === project._id ? new Project(updatedProject.existingProject) : p;
+                    return p.id  === project.id ? new Project(updatedProject.existingProject) : p;
                 });
                 setProjects(updatedProjects);
             })

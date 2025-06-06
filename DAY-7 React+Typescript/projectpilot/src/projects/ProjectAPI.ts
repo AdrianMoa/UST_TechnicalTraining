@@ -54,8 +54,8 @@ const projectAPI = {
         try {
             const response = await fetch(`${url}?_page=${page}&_limit=${limit}&_sort=name`);
             const response_1 = await checkStatus(response);
-            const data = await parseJSON(response_1);
-            return convertToProjectModels(data.projectsData);
+            const res = await parseJSON(response_1);
+            return convertToProjectModels(res.data);
         } catch (error) {
             console.log('log client error ' + error);
             throw new Error(
@@ -65,7 +65,7 @@ const projectAPI = {
     },
 
     async put(project: Project) {
-        return fetch(`${url}/${project._id}`, {
+        return fetch(`${url}/${project.id}`, {
             method: 'PUT',
             body: JSON.stringify(project),
             headers: {
@@ -86,8 +86,8 @@ const projectAPI = {
         return fetch(`${url}/${id}`)
             .then(checkStatus)
             .then(parseJSON)
-            .then(data => {
-                return convertToProjectModel(data.existingProject);
+            .then(res => {
+                return convertToProjectModel(res.data);
             });
     },
     

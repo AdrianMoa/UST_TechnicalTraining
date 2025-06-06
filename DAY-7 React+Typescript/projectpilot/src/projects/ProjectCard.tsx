@@ -41,7 +41,7 @@ function ProjectCard({project, onEdit, onDelete}: ProjectCardProps){
         <div className="card">
             <img src={project.imageUrl} alt={project.name} />
             <section className="section dark">
-                <Link to={'/projects/' + project._id}>
+                <Link to={'/projects/' + project.id}>
                     <h5 className="strong">
                         <strong>{project.name}</strong>
                     </h5>
@@ -56,7 +56,7 @@ function ProjectCard({project, onEdit, onDelete}: ProjectCardProps){
                     <span className="icon-alert"></span>
                     Delete
                 </button>
-                {showModal && <ConfirmModal onConfirm={ () => handleDelete(project._id ?? '') } onCancel={handleCancel} />}
+                {showModal && <ConfirmModal onConfirm={ () => handleDelete(project.id ?? '') } onCancel={handleCancel} />}
             </section>
         </div>
     );

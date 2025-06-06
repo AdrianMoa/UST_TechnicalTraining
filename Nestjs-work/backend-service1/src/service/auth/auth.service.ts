@@ -32,13 +32,13 @@ export class AuthService {
             password: hash,
         });
 
-        const tokens = await this.getTokens(newUser._id.toString(), newUser.email);
-        await this.updateRefreshToken(newUser._id.toString(), tokens.refreshToken);
+        const tokens = await this.getTokens(newUser.id, newUser.email);
+        await this.updateRefreshToken(newUser.id, tokens.refreshToken);
         return {
             ...tokens,
             name: newUser.name,
             email: newUser.email,
-            id: newUser._id.toString(),
+            id: newUser.id,
         };
     }
 
@@ -118,7 +118,7 @@ export class AuthService {
                 ...tokens,
                 name: user.name,
                 email: user.email,
-                id: user._id.toString(),
+                id: user.id
             }
     };
 }

@@ -1,10 +1,8 @@
+import { Exclude } from 'class-transformer';
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Exclude } from "class-transformer";
 import mongoose from "mongoose";
 
-export type UserDocument = User & Document;
-
-@Schema()
+@Schema({ timestamps: true})
 export class User{
     @Exclude()
     _id: mongoose.Types.ObjectId;
@@ -35,4 +33,5 @@ export class User{
     }
 }
 
+export type UserDocument = User & Document;
 export const UserSchema = SchemaFactory.createForClass(User);

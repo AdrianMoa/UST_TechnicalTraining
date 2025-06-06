@@ -1,12 +1,15 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res, UseInterceptors } from "@nestjs/common";
-import { ApiCreatedResponse, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { Response } from "express";
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, NotFoundException, Param, Post, Put, UseInterceptors } from "@nestjs/common";
+import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { CreateProjectDto } from "src/dto/create-project.dto";
 import { UpdateProjectDto } from "src/dto/update-project.dto";
 import { LoggingInterceptor } from "src/common/interceptor/logging.interceptor";
-import { Project } from "src/schema/project.schema";
 import { ProjectService } from "src/service/project/project.service";
+import { ResponseProjectDto } from "src/dto/response-project.dto";
+import { ResponseApiListDto } from "src/dto/response-api-list.dto";
+import { ResponseApiDto } from "src/dto/response-api.dto";
 
+
+//@UseGuards(AccessTokenGuard)
 @ApiTags('projects')
 @Controller('projects')
 @UseInterceptors(LoggingInterceptor)
@@ -15,98 +18,95 @@ export class ProjectController {
 
     @Post()
     @ApiOperation({ summary: 'Create a new Project'})
-    @ApiCreatedResponse({ description: 'Project has been created successfully'})
-    async createProject(
-        @Res() response: Response,
-        @Body() createProjectDto: CreateProjectDto) {
-            try{
-                const newProject = await this.projectService.createProject(createProjectDto);
-                return response.status(HttpStatus.CREATED).json({
-                    message: 'Project has been created successfully',
-                    newProject,
-                });
-            } catch (err) {
-                return response.status(HttpStatus.BAD_REQUEST).json({
-                    statusCode: 400,
-                    message: 'Error: Project not created!',
-                    error: 'Bad Request'
-                });
+    @ApiCreatedResponse({ description: 'Project has been created sucessfully', type: [ResponseApiDto] })
+    @ApiBadRequestResponse({ description: 'Error: Project not created!' })
+    async createProject(@Body() createProjectDto: CreateProjectDto) : Promise<ResponseApiDto> {
+        try{
+            const newProject = await this.projectService.createProject(createProjectDto);
+            return {
+                message: 'Project has been created successfully',
+                data: newProject
             }
+        } catch (error) {
+            throw error instanceof HttpException
+            ? error : new HttpException('Error: Failed to create a new project', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @Put('/:id')
+    @Put(':id')
+    @ApiOperation({ summary: 'Update project information' })
+    @ApiOkResponse({ description: 'Project updated successfully', type: [ResponseApiDto] })
+    @ApiNotFoundResponse({ description: 'Project not found'})
+    @ApiBody({ type: UpdateProjectDto })
     async updateProject(
-        @Res() response: Response, 
         @Param('id') projectId: string, 
-        @Body() updateProjectDto: UpdateProjectDto) {
+        @Body() updateProjectDto: UpdateProjectDto) : Promise<ResponseApiDto> {
             try{
-                const existingProject = await this.projectService.updateProject(projectId, updateProjectDto);
-                return response.status(HttpStatus.OK).json({
+                const project = await this.projectService.updateProject(projectId, updateProjectDto);
+                if(!project) throw new NotFoundException('Project not found');
+
+                return {
                     message: 'Project has been successfully updated',
-                    existingProject,
-                });
-            } catch (err) {
-                return response.status(err.status).json(err.response);
+                    data: new ResponseProjectDto(project)
+                }
+            } catch (error) {
+                throw error instanceof HttpException
+                ? error : new HttpException('Error: Failed to create a new project', HttpStatus.INTERNAL_SERVER_ERROR);
             }
     }
 
     @Get()
-    async getProjects(@Res({ passthrough: true}) response: Response) {
+    @ApiOperation({ summary: 'Get all projects'})
+    @ApiOkResponse({ type: [ResponseApiListDto]})
+    async getProjects() : Promise<ResponseApiListDto> {
         try {
-            response.setHeader('X-Custom', 'value');
-            const projectsData = await this.projectService.getAllProjects();
-            //original
-            /*return response.status(HttpStatus.OK).json({
-                message: 'All projects data found successfully',
-                projectsData,
-            });*/
-
-            //First solution: Together with passthrough, setHeader and the return with the keys, works!
+            const projects = await this.projectService.getAllProjects();
             return {
-                message: 'test',
-                projectsData
+                message: 'All projects data found successfully',
+                data: projects.map(project => new ResponseProjectDto(project))
             }
-
-            //Solution 2: Remove the use of @Res
-            //Solution 3: Remove TransformationInterceptor
         } catch (err) {
-            return (response as any).status(err.status).json(err.response);
+            throw err instanceof HttpException
+            ? err 
+            : new HttpException('Error: Failed to get projects', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @Get('projects2')
-    async getProjects2() : Promise<Project[]> {
-        return (await this.projectService.getAllProjects());
-    }
+    @Get(':id')
+    @ApiOperation({ summary: 'Get project by ID' })
+    @ApiOkResponse({ type: [ResponseApiDto] })
+    @ApiNotFoundResponse({ description: 'Project not found' })
+    async getProject(@Param('id') projectId: string) : Promise<ResponseApiDto> {
+        try {
+            const project = await this.projectService.getProject(projectId);
+            if(!project) throw new NotFoundException('Project not found')
 
-    @Get('/:id')
-    async getProject(
-        @Res() response: Response,
-        @Param('id') projectId: string) {
-            try {
-                const existingProject = await this.projectService.getProject(projectId);
-                return response.status(HttpStatus.OK).json({
-                    message: 'Project found successfully',
-                    existingProject,
-                });
-            } catch (err) {
-                return response.status(err.status).json(err.response);
+            return {
+                message: 'Project data found successfully',
+                data: new ResponseProjectDto(project)
             }
+        } catch (error) {
+            throw error instanceof HttpException
+                ? error : new HttpException('Error: Failed to get project', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @Delete('/:id')
-    async deleteProject(
-        @Res() response: Response,
-        @Param('id') projectId: string) {
+    @Delete(':id')
+    @ApiOperation({ summary: 'Delete a project by ID' })
+    @ApiOkResponse({ description: 'Project deleted successfully' })
+    @ApiNotFoundResponse({ description: 'Project not found' })
+    async deleteProject(@Param('id') projectId: string) : Promise<ResponseApiDto> {
         try {
             const deletedProject = await this.projectService.deleteProject(projectId);
-            return response.status(HttpStatus.OK).json({
+            if(!deletedProject) throw new NotFoundException('Project not found');
+
+            return {
                 message: 'Project deleted successfully',
-                deletedProject,
-            });
+                data: new ResponseProjectDto(deletedProject)
+            }
         } catch (err) {
-            
-            return response.status(err.status).json(err.response);
+            throw err instanceof HttpException
+                ? err : new HttpException('Error: Failed to get project', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

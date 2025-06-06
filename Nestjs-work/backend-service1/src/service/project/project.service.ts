@@ -10,39 +10,42 @@ export class ProjectService {
     constructor(@InjectModel('Project') private projectModel: Model<IProject>){}
 
     async createProject(createProjectDto: CreateProjectDto): Promise<IProject> {
-        const newProject = await new this.projectModel(createProjectDto);
-        return newProject.save();
+        const newProject = new this.projectModel(createProjectDto);
+        const saved = await newProject.save();
+        return this.toIProject(saved.toObject());
     }
 
-    async updateProject(projectId: string, updateProjectDto: UpdateProjectDto) : Promise<IProject> {
-        const existingProject = await this.projectModel.findByIdAndUpdate(projectId, updateProjectDto, { new: true });
-        if(!existingProject) {
-            throw new NotFoundException(`Project #${projectId} not found`);
-        }
-        return existingProject;
+    async updateProject(projectId: string, updateProjectDto: UpdateProjectDto) : Promise<IProject | null> {
+        const project = await this.projectModel
+            .findByIdAndUpdate(projectId, updateProjectDto).lean();
+
+        return project ? this.toIProject(project) : null;
     }
 
     async getAllProjects(): Promise<IProject[]> {
-        const projectData = await this.projectModel.find();
-        if(!projectData || projectData.length == 0) {
-            throw new NotFoundException('Projects data not found!');
-        }
-        return projectData;
+        const projectData = await this.projectModel.find().lean();
+        return projectData.map(p => this.toIProject(p));
     }
 
-    async getProject(projectId: string): Promise<IProject> {
-        const existingProject = await  this.projectModel.findById(projectId).exec();
-        if(!existingProject) {
-            throw new NotFoundException(`Project #${projectId} not found`);
-        }
-        return existingProject;
+    async getProject(projectId: string): Promise<IProject | null> {
+        const project = await this.projectModel.findById(projectId).lean();
+        return project ? this.toIProject(project) : null;
     }
 
-    async deleteProject(projectId: string): Promise<IProject> {
+    async deleteProject(projectId: string): Promise<IProject | null> {
         const deletedProject = await this.projectModel.findByIdAndDelete(projectId);
-        if(!deletedProject) {
-            throw new NotFoundException(`Project #${projectId} not found`);
+        return deletedProject ? this.toIProject(deletedProject) : null;
+    }
+
+    private toIProject(data: any) : IProject {
+        return {
+            id: data._id.toString(),
+            name: data.name,
+            description: data.description,
+            imageUrl:  data.imageUrl,
+            contractSignedOn: data.contractSignedOn,
+            budget: data.budget,
+            isActive: data.isActive
         }
-        return deletedProject;
     }
 }

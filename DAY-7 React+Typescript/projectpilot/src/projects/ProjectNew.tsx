@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import { Project } from "./Project";
 import ProjectForm from "./ProjectForm";
-import { projectAPI } from "./ProjectAPI";
+import { projectAPI } from "./../api/ProjectAPI";
 import { useState } from "react";
 
 function ProjectNew() {

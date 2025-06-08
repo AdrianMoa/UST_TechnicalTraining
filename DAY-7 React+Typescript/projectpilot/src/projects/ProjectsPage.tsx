@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ProjectList from './ProjectList';
 import { Project } from "./Project";
-import { projectAPI } from "./ProjectAPI";
+import { projectAPI } from "./../api/ProjectAPI";
 
 function ProjectsPage(){
     const [projects, setProjects] = useState<Project[]>([]);

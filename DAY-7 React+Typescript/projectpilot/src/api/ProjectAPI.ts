@@ -1,4 +1,4 @@
-import { Project } from './Project';
+import { Project } from './../projects/Project';
 //const baseUrl = 'http://localhost:4000'; //this is the port configured from json-server
 const baseUrl = 'http://localhost:3000'; //this is the port configured from NestJS API.
 const url = `${baseUrl}/projects`;

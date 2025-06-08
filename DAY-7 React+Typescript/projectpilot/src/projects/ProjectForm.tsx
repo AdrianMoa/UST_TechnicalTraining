@@ -1,7 +1,6 @@
 
 import { useState, type SyntheticEvent } from 'react';
 import { Project } from './Project';
-//import { idAPI } from './IDAPI';
 
 interface ProjectFormProps{
     project: Project;
@@ -33,7 +32,6 @@ function ProjectForm({ project: initialProject, onSave, onCancel }: ProjectFormP
 
             if(project.isNew){
                 project.imageUrl = `/assets/placeimg_500_300_arch${randomNumberInRange(1,12)}.jpg`;
-                //project.id = await idAPI.getNextID();
             }
             
             onSave(project);

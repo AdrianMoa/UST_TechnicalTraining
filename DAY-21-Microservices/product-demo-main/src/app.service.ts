@@ -11,8 +11,8 @@ export class AppService {
     return 'Hello World!';
   }
 
-  createProduct(createProductDto: any) {
-    return this.client.send({ role: 'product', cmd: 'create' }, { createProductDto });
+  createProduct(name: string) {
+    return this.client.send({ role: 'product', cmd: 'create' }, { name });
   }
 
   getProductById(id: number) {

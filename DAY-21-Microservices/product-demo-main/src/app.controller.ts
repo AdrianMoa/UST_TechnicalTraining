@@ -16,7 +16,7 @@ export class AppController {
   }
 
   @Post('/create')
-  create(@Body() createProductDto) {
-    return this.appService.createProduct(createProductDto);
+  create(@Body() body: { name: string }) {
+    return this.appService.createProduct(body.name);
   }
 }

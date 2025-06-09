@@ -6,6 +6,13 @@ import { tap } from 'rxjs/operators';
 export class LoggingInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     console.log('[Log Interceptor] Before...');
+    const request = context.switchToHttp().getRequest();
+    console.log('Request:', {
+      method: request.method,
+      url: request.url,
+      headers: request.headers,
+      body: request.body
+    });
 
     const now = Date.now();
     return next

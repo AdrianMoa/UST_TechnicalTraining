@@ -1,18 +1,19 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, NotFoundException, Param, Post, Put, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, NotFoundException, Param, Post, Put, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { CreateProjectDto } from "src/dto/create-project.dto";
 import { UpdateProjectDto } from "src/dto/update-project.dto";
-import { LoggingInterceptor } from "src/common/interceptor/logging.interceptor";
+//import { LoggingInterceptor } from "src/common/interceptor/logging.interceptor";
 import { ProjectService } from "src/service/project/project.service";
 import { ResponseProjectDto } from "src/dto/response-project.dto";
 import { ResponseApiListDto } from "src/dto/response-api-list.dto";
 import { ResponseApiDto } from "src/dto/response-api.dto";
+import { AccessTokenGuard } from "src/common/guards/guard.access_token";
 
 
-//@UseGuards(AccessTokenGuard)
+@UseGuards(AccessTokenGuard)
 @ApiTags('projects')
 @Controller('projects')
-@UseInterceptors(LoggingInterceptor)
+//@UseInterceptors(LoggingInterceptor)
 export class ProjectController {
     constructor(private readonly projectService: ProjectService) { }
 

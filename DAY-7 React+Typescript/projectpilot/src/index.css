@@ -18,10 +18,43 @@ body,
     align-items: center;
 }
 
-header {
-    height: 5.187rem;
-}
-
 a.button.active {
     border: 1px solid var(--fore-color);
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 100;
+}
+
+.mini-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.nav-left, .nav-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.page-icon img {
+  max-height: 50px; /* Ajustar el tamaño del logo */
+}
+
+.user-welcome {
+  font-weight: bold;
+}
+
+.logout-button {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
 }

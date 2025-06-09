@@ -4,10 +4,9 @@ import { AccessTokenGuard } from "src/common/guards/guard.access_token";
 import { CreateUserDto } from "src/dto/create-user.dto";
 import { ResponseUserDto } from "src/dto/response-user.dto";
 import { UpdateUserDto } from "src/dto/update-user.dto";
-import { User } from "src/schema/user.schema";
 import { UsersService } from "src/service/user/users.service";
 
-//@UseGuards(AccessTokenGuard)
+@UseGuards(AccessTokenGuard)
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {

@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule, DocumentBuilder, SwaggerDocumentOptions } from '@nestjs/swagger';
 import { TransformInterceptor } from './common/interceptor/interceptor.transform';
+import { LoggingInterceptor } from './common/interceptor/logging.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { abortOnError: false, cors: true });
@@ -14,6 +15,14 @@ async function bootstrap() {
     .setTitle('Backend NestJS  Documentation')
     .setDescription('Swagger documentation for NestJS API project')
     .setVersion('1.0')
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      name: 'Authorization',
+      description: 'Register JWT Token',
+      in: 'header'
+    }, 'JWT')
     .addTag('UST Course')
     .build();
   
@@ -28,6 +37,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app,  documentFactory);
 
   app.useGlobalInterceptors(new TransformInterceptor());
+  app.useGlobalInterceptors(new LoggingInterceptor());
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

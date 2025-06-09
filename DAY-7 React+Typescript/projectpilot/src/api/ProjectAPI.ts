@@ -1,8 +1,6 @@
 import { safeRequest } from '../utils/safeRequest';
 import { Project } from './../projects/Project';
 import axiosInstance from './axiosInstance';
-const baseUrl = 'http://localhost:3000'; //this is the port configured from NestJS API. NOT USED DUE TO AXIOS INSTANCE
-const url = `${baseUrl}/projects`;
 
 function translateStatusToErrorMessage(status: number){
     switch (status){
@@ -13,26 +11,6 @@ function translateStatusToErrorMessage(status: number){
         default:
             return 'There was an error retrieving the project(s). Please try again.';
     }
-}
-
-function checkStatus(response: any){
-    if(response.ok){
-        return response;
-    } else {
-        const httpErrorInfo = {
-            status: response.status,
-            statusText: response.statusText,
-            url: response.url,
-        };
-        console.log(`log server http error: ${JSON.stringify(httpErrorInfo)}`);
-
-        let errorMessage = translateStatusToErrorMessage(httpErrorInfo.status);
-        throw new Error(errorMessage);
-    }
-}
-
-function parseJSON(response: Response){
-    return response.json();
 }
 
 function convertToProjectModels(data: any[]): Project[] {
@@ -46,86 +24,45 @@ function convertToProjectModel(item: any): Project{
 
 const projectAPI = {
     async get(page = 1, limit = 20) {
-        try {
-            const responseData = await safeRequest<Project[], Project[]>(
-                () => axiosInstance.get('/projects', {
-                    params: {
-                        page: page,
-                        _limit: limit,
-                        sort: 'name'
-                    }
-                }), convertToProjectModels
-            );
-
-            return responseData.data;
-        } catch (error) {
-            console.log('log client error ' + error);
-            throw new Error(
-                'There was an error retrieving the projects. Please try again.'
-            );
-        }
+        const responseData = await safeRequest<Project[], Project[]>(
+            () => axiosInstance.get('/projects', {
+                params: {
+                    page: page,
+                    _limit: limit,
+                    sort: 'name'
+                }
+            }), convertToProjectModels
+        );
+        return responseData.data;
     },
 
     async put(project: Project) {
-        return fetch(`${url}/${project.id}`, {
-            method: 'PUT',
-            body: JSON.stringify(project),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(checkStatus)
-            .then(parseJSON)
-            .catch((error: TypeError) => {
-                console.log('log client error ' + error);
-                throw new Error(
-                    'There was an error updating the project. Please try again.'
-                );
-            });
+        const responseData = await safeRequest<Project, Project>(
+            () => axiosInstance.put(`/projects/${project.id}`, project), convertToProjectModel
+        );
+        console.log(responseData);
+        return responseData.data;
     },
 
     async find(id: string) {
-        return fetch(`${url}/${id}`)
-            .then(checkStatus)
-            .then(parseJSON)
-            .then(res => {
-                return convertToProjectModel(res.data);
-            });
+        const responseData = await safeRequest<Project, Project>(
+            () => axiosInstance.get(`/projects/${id}`), convertToProjectModel
+        );
+        return responseData.data;
     },
     
     async post(project: Project) {
-        return fetch(`${url}`, {
-            method: 'POST',
-            body: JSON.stringify(project),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(checkStatus)
-        .then(parseJSON)
-        .catch((error: TypeError) => {
-            console.log('log client error ' + error);
-            throw new Error(
-                'There was an error creating the new project. Please try again.'
-            )
-        });
+        const responseData = await safeRequest<Project, Project>(
+            () => axiosInstance.post('/projects', project), convertToProjectModel
+        );
+        return responseData.data;
     },
 
     async delete(id: string){
-        return fetch(`${url}/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(checkStatus)
-        .then(parseJSON)
-        .catch((error: TypeError) => {
-            console.log('log client error ' + error);
-            throw new Error(
-                'There was an error deleting the project. Please try again.'
-            )
-        })
+        const responseData = await safeRequest<Project, Project>(
+            () => axiosInstance.delete(`/projects/${id}`), convertToProjectModel
+        );
+        return responseData.data;
     }
 };
 

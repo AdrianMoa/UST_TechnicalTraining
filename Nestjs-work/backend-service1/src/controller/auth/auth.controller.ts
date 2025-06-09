@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiOperation } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { boolean } from "joi";
 import { AuthUser } from "src/common/decorator/decorator.auth_user";
 import { AccessTokenGuard } from "src/common/guards/guard.access_token";
@@ -8,6 +8,7 @@ import { AuthDto } from "src/dto/auth.dto";
 import { CreateUserDto } from "src/dto/create-user.dto";
 import { AuthService } from "src/service/auth/auth.service";
 
+@ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) {}
@@ -25,8 +26,6 @@ export class AuthController {
     @ApiOkResponse({ description: 'User valid', /*type: [LoginResponse] */})
     @ApiBadRequestResponse({ description: 'Error: Invalid credentials!' })
     signin(@Body() data: AuthDto) {
-        console.clear();
-        console.log(data);
         return this.authService.signIn(data);
     }
 

@@ -1,13 +1,13 @@
 import './App.css';
 import ProjectsPage from "./projects/ProjectsPage";
 import ProjectPage from './projects/ProjectPage';
-import { BrowserRouter, Routes, Route, NavLink } from 'react-router';
+import { BrowserRouter, Routes, Route } from 'react-router';
 import HomePage from './home/HomePage';
 import ProjectNew from './projects/ProjectNew';
 import { AuthProvider } from './auth/AuthProvider';
 import { PrivateRoute } from './auth/PrivateRoute';
 import { Navbar } from './components/NavBar';
-import { Login } from './components/Login';
+import { Login } from './user/Login';
 
 function App(){
   return (

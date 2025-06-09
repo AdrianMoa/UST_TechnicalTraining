@@ -2,7 +2,6 @@ import { Body, Controller, Delete, Get, HttpException, HttpStatus, NotFoundExcep
 import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { CreateProjectDto } from "src/dto/create-project.dto";
 import { UpdateProjectDto } from "src/dto/update-project.dto";
-//import { LoggingInterceptor } from "src/common/interceptor/logging.interceptor";
 import { ProjectService } from "src/service/project/project.service";
 import { ResponseProjectDto } from "src/dto/response-project.dto";
 import { ResponseApiListDto } from "src/dto/response-api-list.dto";
@@ -11,9 +10,8 @@ import { AccessTokenGuard } from "src/common/guards/guard.access_token";
 
 
 @UseGuards(AccessTokenGuard)
-@ApiTags('projects')
+@ApiTags('Projects')
 @Controller('projects')
-//@UseInterceptors(LoggingInterceptor)
 export class ProjectController {
     constructor(private readonly projectService: ProjectService) { }
 

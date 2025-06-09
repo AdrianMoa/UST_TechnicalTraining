@@ -1,6 +1,7 @@
+import { safeRequest } from '../utils/safeRequest';
 import { Project } from './../projects/Project';
-//const baseUrl = 'http://localhost:4000'; //this is the port configured from json-server
-const baseUrl = 'http://localhost:3000'; //this is the port configured from NestJS API.
+import axiosInstance from './axiosInstance';
+const baseUrl = 'http://localhost:3000'; //this is the port configured from NestJS API. NOT USED DUE TO AXIOS INSTANCE
 const url = `${baseUrl}/projects`;
 
 function translateStatusToErrorMessage(status: number){
@@ -34,12 +35,6 @@ function parseJSON(response: Response){
     return response.json();
 }
 
-// function delay(ms: number){
-//     return function (x: any):  Promise<any> {
-//         return new Promise((resolve) => setTimeout(() => resolve(x), ms));
-//     }
-// }
-
 function convertToProjectModels(data: any[]): Project[] {
     let projects: Project[] = data.map(convertToProjectModel);
     return projects;
@@ -52,10 +47,17 @@ function convertToProjectModel(item: any): Project{
 const projectAPI = {
     async get(page = 1, limit = 20) {
         try {
-            const response = await fetch(`${url}?_page=${page}&_limit=${limit}&_sort=name`);
-            const response_1 = await checkStatus(response);
-            const res = await parseJSON(response_1);
-            return convertToProjectModels(res.data);
+            const responseData = await safeRequest<Project[], Project[]>(
+                () => axiosInstance.get('/projects', {
+                    params: {
+                        page: page,
+                        _limit: limit,
+                        sort: 'name'
+                    }
+                }), convertToProjectModels
+            );
+
+            return responseData.data;
         } catch (error) {
             console.log('log client error ' + error);
             throw new Error(

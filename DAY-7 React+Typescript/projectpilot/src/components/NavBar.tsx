@@ -26,12 +26,19 @@ export const Navbar = () => {
             </nav>
             <nav className="nav-right">
                 {!isAuthenticated ? (
-                    <NavLink to="/login" className="button rounded">
-                        Login
-                    </NavLink>
+                    <>
+                        <NavLink to="/login" className="button rounded">
+                            Login
+                        </NavLink>
+                        <NavLink to='/register' className='button rounded'>
+                            Register
+                        </NavLink>
+                    </>
                 ) : (
                     <>
-                        <span>Welcome, {user?.username}</span>
+                        <NavLink to='/profile' className='button rounded'>
+                            Welcome, {user?.username}
+                        </NavLink>
                         <button onClick={logout}>Logout</button>
                     </>
                 )}

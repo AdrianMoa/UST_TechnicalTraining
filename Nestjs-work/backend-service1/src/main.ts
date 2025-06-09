@@ -7,8 +7,12 @@ import { TransformInterceptor } from './common/interceptor/interceptor.transform
 import { configureSwaggerUI } from './swagger.config';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, { abortOnError: false, cors: true });
-
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { abortOnError: false });
+  
+  app.enableCors({
+    origin: 'http://localhost:5173', //specific frontend URL
+    credentials: true, //Allow cookies/headers auth
+  });
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new TransformInterceptor());
   //app.useGlobalInterceptors(new LoggingInterceptor());

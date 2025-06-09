@@ -8,6 +8,8 @@ import { AuthProvider } from './auth/AuthProvider';
 import { PrivateRoute } from './auth/PrivateRoute';
 import { Navbar } from './components/NavBar';
 import { Login } from './user/Login';
+import { Register } from './user/Register';
+import { Profile } from './user/Profile';
 
 function App(){
   return (
@@ -29,6 +31,11 @@ function App(){
             <Route path='/project' element={
               <PrivateRoute>
                 <ProjectNew />
+              </PrivateRoute>} />
+            <Route path='/register' element={<Register />} />
+            <Route path='/profile' element={
+              <PrivateRoute>
+                <Profile />
               </PrivateRoute>} />
           </Routes>
         </div>

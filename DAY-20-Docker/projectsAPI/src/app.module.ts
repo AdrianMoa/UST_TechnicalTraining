@@ -6,10 +6,12 @@ import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { UsersModule } from './module/users.module';
 import { AuthModule } from './module/auth.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      isGlobal: true,
       validationSchema: Joi.object({
         MONGODB_URI: Joi.string().required(),
         JWT_ACCESS_SECRET: Joi.string().required(),
@@ -22,14 +24,22 @@ import { AuthModule } from './module/auth.module';
         abortEarly: false,
       }
     }),
-    MongooseModule.forRoot(process.env.MONGODB_URI ?? '', {dbName: 'projectdb'}), //import for mongodb principal DB
+    ThrottlerModule.forRoot([{ ttl: 60000, limit: 10}]),
+    MongooseModule.forRoot(process.env.MONGODB_URI ?? '', {
+      dbName: process.env.DATABASE_NAME,
+      auth: {
+        username: process.env.DATABASE_USER,
+        password: process.env.DATABASE_PASS,
+      },
+    }),
+
+    //feature modules
     ProjectModule, //Project Module that maps providers and controller related to Project
     UsersModule,
     AuthModule,
   ],
-  //controllers: [AppController],
-  //providers: [AppService],
 })
+
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer

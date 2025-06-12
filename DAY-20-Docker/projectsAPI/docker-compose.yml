@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: backend
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+      - JWT_ACCESS_SECRET=012345abcde6789
+      - JWT_ACCESS_TOKEN_EXPIRATION=900s
+      - JWT_REFRESH_SECRET=abcde9876543210
+      - JWT_REFRESH_TOKEN_EXPIRATION=1y
+      - PORT=4000
+      - CORS_ORIGIN=http://localhost:5137
+      - DATABASE_URI=mongodb://admin:admin@database:27017/projectdb?authSource=admin
+    ports:
+      - '4000:4000'
+    depends_on:
+      - database
+
+  database:
+    image: mongo:8.0.9
+    container_name: mongodb
+    restart: always
+    ports:
+      - '27017:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - MONGO_INITDB_DATABASE=projectdb

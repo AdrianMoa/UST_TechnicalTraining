@@ -2,7 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ProjectModule } from './module/project.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { LoggerMiddleware } from './middleware/logger.middleware';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 import { UsersModule } from './module/users.module';
 import { AuthModule } from './module/auth.module';
@@ -12,12 +12,14 @@ import { ThrottlerModule } from '@nestjs/throttler';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      ignoreEnvFile: process.env.NODE_ENV === 'production',
       validationSchema: Joi.object({
-        MONGODB_URI: Joi.string().required(),
-        JWT_ACCESS_SECRET: Joi.string().required(),
+        DATABASE_URI: Joi.string().uri().required(),
+        JWT_ACCESS_SECRET: Joi.string().min(15).required(),
         JWT_ACCESS_TOKEN_EXPIRATION: Joi.string().required(),
-        JWT_REFRESH_SECRET: Joi.string().required(),
+        JWT_REFRESH_SECRET: Joi.string().min(15).required(),
         JWT_REFRESH_TOKEN_EXPIRATION: Joi.string().required(),
+        PORT: Joi.number().default(4000),
       }),
       validationOptions: {
         allowUnknown: true,
@@ -25,12 +27,12 @@ import { ThrottlerModule } from '@nestjs/throttler';
       }
     }),
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 10}]),
-    MongooseModule.forRoot(process.env.MONGODB_URI ?? '', {
-      dbName: process.env.DATABASE_NAME,
-      auth: {
-        username: process.env.DATABASE_USER,
-        password: process.env.DATABASE_PASS,
-      },
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get<string>('DATABASE_URI'),
+      }),
     }),
 
     //feature modules
